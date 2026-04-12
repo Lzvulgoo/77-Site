@@ -1,0 +1,81 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Open Graph -->
+  <meta property="og:title" content="77">
+  <meta property="og:description" content="Perfis do grupo 77">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.sevenseven.digital/">
+  <meta property="og:image" content="https://www.sevenseven.digital/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="77">
+  <meta name="twitter:description" content="Perfis do grupo 77">
+  <meta name="twitter:image" content="https://www.sevenseven.digital/og-image.png">
+  <title>77</title>
+  <link rel="icon" type="image/png" href="/favicon.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <video id="bg-video" muted loop playsinline preload="metadata"></video>
+  <audio id="music" loop preload="metadata"></audio>
+
+  <div id="overlay" role="button" aria-label="Entrar" tabindex="0">
+    <div class="enter-text" id="enterText" data-text="77">77</div>
+  </div>
+
+  <div id="profiles" class="hidden"></div>
+  <button
+    id="discordInviteLauncher"
+    class="hidden"
+    type="button"
+    aria-controls="discordInvite"
+    aria-expanded="false"
+    aria-label="Abrir convite do Discord 77"
+  >
+    <img src="icons/discord_white.png" alt="" loading="lazy">
+  </button>
+
+  <div
+    id="discordInvite"
+    class="hidden"
+    aria-hidden="true"
+  >
+    <button
+      id="discordInviteClose"
+      class="discord-invite-close"
+      type="button"
+      aria-label="Fechar convite do Discord"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+
+    <a
+      class="discord-invite-link"
+      href="https://discord.gg/sevenseven"
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="Entrar no servidor Discord 77"
+    >
+      <span class="discord-invite-icon" aria-hidden="true">
+        <img src="/favicon.png" alt="" loading="lazy">
+      </span>
+
+      <span class="discord-invite-content">
+        <span class="discord-invite-eyebrow">Servidor Discord</span>
+        <span class="discord-invite-title">77</span>
+        <span class="discord-invite-subtitle">Junte-se ao nosso Discord</span>
+      </span>
+
+      <span class="discord-invite-action" aria-hidden="true">Entrar</span>
+    </a>
+  </div>
+
+  <script type="module" src="script.js"></script>
+</body>
+</html>

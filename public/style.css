@@ -1,0 +1,1719 @@
+:root{
+  --site-bg:#000;
+  --surface-strong:rgba(5,5,5,0.88);
+  --surface-soft:rgba(10,10,10,0.76);
+  --surface-border:rgba(255,255,255,0.072);
+  --surface-border-strong:rgba(255,255,255,0.13);
+  --text-strong:#fff;
+  --text-soft:rgba(255,255,255,0.8);
+  --text-faint:rgba(255,255,255,0.58);
+  --glow-soft:rgba(255,255,255,0.08);
+  --glow-strong:rgba(255,255,255,0.14);
+  --shadow-deep:rgba(0,0,0,0.76);
+  --shadow-soft:rgba(0,0,0,0.46);
+  --ease-premium:cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+body{
+  margin:0;
+  min-height:100vh;
+  overflow:hidden;
+  position:relative;
+  isolation:isolate;
+  font-family:Arial, Helvetica, sans-serif;
+  background:var(--site-bg);
+  color:var(--text-strong);
+  cursor:url("icons/GreyOsuCross.png") 16 16, crosshair;
+}
+
+html,
+body,
+*{
+  cursor:url("icons/GreyOsuCross.png") 16 16, crosshair;
+}
+
+body::before,
+body::after{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+}
+
+body::before{
+  z-index:-2;
+  background:
+    radial-gradient(circle at 14% 18%, rgba(255,255,255,0.08), transparent 24%),
+    radial-gradient(circle at 84% 22%, rgba(255,255,255,0.05), transparent 28%),
+    radial-gradient(circle at 50% 100%, rgba(255,255,255,0.04), transparent 34%),
+    radial-gradient(circle at 50% 0%, rgba(255,255,255,0.024), transparent 46%),
+    linear-gradient(135deg, rgba(255,255,255,0.012), transparent 38%, rgba(255,255,255,0.01) 76%, transparent 100%);
+  opacity:0.58;
+  transform:scale(1.02);
+  animation:ambientFloat 18s ease-in-out infinite alternate;
+}
+
+body::after{
+  z-index:-1;
+  background:
+    radial-gradient(circle at center, transparent 10%, rgba(0,0,0,0.3) 68%, rgba(0,0,0,0.82) 100%),
+    linear-gradient(180deg, rgba(0,0,0,0.22), rgba(0,0,0,0.52)),
+    linear-gradient(90deg, rgba(0,0,0,0.3), transparent 18%, transparent 82%, rgba(0,0,0,0.3));
+  transition:background 0.95s var(--ease-premium), opacity 0.95s var(--ease-premium);
+}
+
+.content{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  width:100%;
+}
+
+#bg-video{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  z-index:-3;
+  pointer-events:none;
+  background:#000;
+  filter:contrast(1) saturate(0.82) brightness(0.58) blur(6px);
+  transform:scale(1.09);
+  transition:filter 1.18s var(--ease-premium), transform 1.3s var(--ease-premium);
+}
+
+#bg-video.hidden-media{
+  display:none;
+}
+
+#overlay{
+  position:fixed;
+  inset:0;
+  backdrop-filter:blur(26px) saturate(118%);
+  -webkit-backdrop-filter:blur(26px) saturate(118%);
+  background:
+    radial-gradient(circle at center, rgba(255,255,255,0.04), transparent 24%),
+    linear-gradient(180deg, rgba(0,0,0,0.16), rgba(0,0,0,0.46));
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  cursor:url("icons/GreyOsuCross.png") 16 16, crosshair;
+  z-index:10;
+  transition:
+    backdrop-filter 0.96s var(--ease-premium),
+    -webkit-backdrop-filter 0.96s var(--ease-premium),
+    opacity 0.88s ease,
+    background 0.96s var(--ease-premium),
+    transform 0.96s var(--ease-premium);
+  pointer-events:auto;
+  overflow:hidden;
+}
+
+#overlay::before,
+#overlay::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+}
+
+#overlay::before{
+  background:
+    radial-gradient(circle at center, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.028) 18%, transparent 42%),
+    radial-gradient(circle at 50% 64%, rgba(0,0,0,0.16), transparent 54%);
+  opacity:0.92;
+  transition:transform 0.96s var(--ease-premium), opacity 0.7s ease, filter 0.96s var(--ease-premium);
+  animation:overlayPulse 8s ease-in-out infinite alternate;
+}
+
+#overlay::after{
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.034), transparent 22%),
+    linear-gradient(0deg, rgba(0,0,0,0.22), transparent 36%);
+  opacity:0.72;
+  transition:opacity 0.78s ease;
+}
+
+.enter-text{
+  font-size:34px;
+  font-weight:700;
+  letter-spacing:4px;
+  color:transparent;
+  -webkit-text-stroke:1px rgba(255,255,255,0.56);
+  position:relative;
+  transition:
+    transform 0.45s var(--ease-premium),
+    letter-spacing 0.45s var(--ease-premium),
+    -webkit-text-stroke 0.45s ease,
+    opacity 0.35s ease;
+  pointer-events:none;
+  user-select:none;
+  opacity:0;
+  animation:fadeIn 1s ease forwards;
+  text-transform:uppercase;
+}
+
+.enter-text::before{
+  content:attr(data-text);
+  position:absolute;
+  left:0;
+  top:0;
+  width:0%;
+  color:white;
+  overflow:hidden;
+  white-space:nowrap;
+  filter:drop-shadow(0 0 10px rgba(255,255,255,0.08));
+  transition:width 0.55s var(--ease-premium), filter 0.35s ease;
+}
+
+#overlay:hover::before{
+  transform:scale(1.035);
+}
+
+#overlay:hover .enter-text::before{
+  width:100%;
+  filter:drop-shadow(0 0 14px rgba(255,255,255,0.12));
+}
+
+#overlay:hover .enter-text{
+  transform:translateY(-2px);
+  letter-spacing:4.8px;
+  -webkit-text-stroke:1px rgba(255,255,255,0.16);
+}
+
+body.is-revealing::after,
+body.is-revealed::after{
+  background:
+    radial-gradient(circle at center, transparent 8%, rgba(0,0,0,0.32) 68%, rgba(0,0,0,0.9) 100%),
+    linear-gradient(180deg, rgba(0,0,0,0.14), rgba(0,0,0,0.58)),
+    linear-gradient(90deg, rgba(0,0,0,0.34), transparent 16%, transparent 84%, rgba(0,0,0,0.34));
+}
+
+body.is-revealing #bg-video,
+body.is-revealed #bg-video{
+  filter:contrast(1.1) saturate(0.92) brightness(0.8) blur(0px);
+  transform:scale(1.028);
+}
+
+body.is-revealing #overlay,
+body.is-revealed #overlay{
+  backdrop-filter:blur(0px) saturate(104%);
+  -webkit-backdrop-filter:blur(0px) saturate(104%);
+  background:
+    radial-gradient(circle at center, rgba(255,255,255,0.018), transparent 22%),
+    linear-gradient(180deg, rgba(0,0,0,0.08), rgba(0,0,0,0));
+  opacity:0;
+  transform:scale(1.028);
+  pointer-events:none;
+}
+
+body.is-revealing #overlay::before,
+body.is-revealed #overlay::before{
+  opacity:0;
+  transform:scale(1.12);
+  filter:blur(14px);
+}
+
+body.is-revealing #overlay::after,
+body.is-revealed #overlay::after{
+  opacity:0.08;
+}
+
+#discordInviteLauncher,
+#discordInvite{
+  position:fixed;
+  left:50%;
+  bottom:max(20px, env(safe-area-inset-bottom));
+  opacity:0;
+  pointer-events:none;
+  transform:translate(-50%, 18px) scale(0.94);
+  transition:
+    opacity 0.82s var(--ease-premium),
+    transform 0.92s var(--ease-premium),
+    border-color 0.3s ease,
+    box-shadow 0.34s var(--ease-premium),
+    background 0.34s ease;
+  z-index:4;
+}
+
+#discordInviteLauncher{
+  width:46px;
+  height:46px;
+  padding:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border:none;
+  border-radius:16px;
+  color:var(--text-strong);
+  background:linear-gradient(180deg, rgba(14,14,14,0.78), rgba(4,4,4,0.92));
+  border:1px solid rgba(255,255,255,0.078);
+  box-shadow:
+    0 18px 38px rgba(0,0,0,0.44),
+    0 0 22px rgba(255,255,255,0.028),
+    0 1px 0 rgba(255,255,255,0.042) inset;
+  backdrop-filter:blur(14px) saturate(115%);
+  -webkit-backdrop-filter:blur(14px) saturate(115%);
+}
+
+#discordInviteLauncher.show{
+  opacity:1;
+  pointer-events:auto;
+  transform:translate(-50%, 0) scale(1);
+}
+
+#discordInviteLauncher img{
+  width:20px;
+  height:20px;
+  display:block;
+  filter:drop-shadow(0 0 10px rgba(255,255,255,0.16));
+  opacity:0.94;
+}
+
+#discordInvite{
+  width:min(340px, calc(100vw - 24px));
+  min-height:68px;
+  border-radius:16px;
+  color:var(--text-strong);
+  overflow:hidden;
+  isolation:isolate;
+  background:linear-gradient(180deg, rgba(14,14,14,0.78), rgba(4,4,4,0.92));
+  border:1px solid rgba(255,255,255,0.078);
+  box-shadow:
+    0 24px 54px rgba(0,0,0,0.54),
+    0 0 28px rgba(255,255,255,0.032),
+    0 1px 0 rgba(255,255,255,0.038) inset;
+  backdrop-filter:blur(14px) saturate(115%);
+  -webkit-backdrop-filter:blur(14px) saturate(115%);
+}
+
+#discordInvite::before,
+#discordInvite::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+}
+
+#discordInvite::before{
+  inset:-10%;
+  background-image:url("/discord-invite-bg.jpg");
+  background-size:cover;
+  background-position:center;
+  filter:grayscale(1) brightness(0.44) contrast(1.08) blur(14px);
+  transform:scale(1.08);
+  opacity:0.78;
+  z-index:-2;
+  transition:transform 0.4s var(--ease-premium), opacity 0.3s ease, filter 0.4s var(--ease-premium);
+}
+
+#discordInvite::after{
+  background:
+    linear-gradient(90deg, rgba(2,2,2,0.9) 0%, rgba(2,2,2,0.8) 34%, rgba(2,2,2,0.58) 64%, rgba(0,0,0,0.82) 100%),
+    linear-gradient(180deg, rgba(255,255,255,0.038), rgba(255,255,255,0.012) 28%, rgba(0,0,0,0.26) 100%);
+  z-index:-1;
+}
+
+#discordInvite.is-open{
+  opacity:1;
+  pointer-events:auto;
+  transform:translate(-50%, 0) scale(1);
+}
+
+#discordInviteLauncher:focus-visible,
+.discord-invite-link:focus-visible,
+.discord-invite-close:focus-visible{
+  outline:1px solid rgba(255,255,255,0.22);
+  outline-offset:4px;
+}
+
+.discord-invite-link,
+.discord-invite-icon,
+.discord-invite-content,
+.discord-invite-action{
+  position:relative;
+  z-index:1;
+}
+
+.discord-invite-link{
+  width:100%;
+  min-height:68px;
+  display:flex;
+  align-items:center;
+  justify-content:flex-start;
+  gap:10px;
+  padding:11px 40px 11px 14px;
+  box-sizing:border-box;
+  color:inherit;
+  text-decoration:none;
+}
+
+.discord-invite-close{
+  position:absolute;
+  top:8px;
+  right:8px;
+  width:14px;
+  height:14px;
+  padding:0;
+  display:grid;
+  place-items:center;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,0.08);
+  background:rgba(6,6,6,0.22);
+  color:rgba(255,255,255,0.72);
+  font-size:10px;
+  line-height:1;
+  box-shadow:
+    0 8px 16px rgba(0,0,0,0.2),
+    0 1px 0 rgba(255,255,255,0.035) inset;
+  z-index:3;
+  transition:
+    transform 0.28s var(--ease-premium),
+    color 0.24s ease,
+    border-color 0.24s ease,
+    background 0.24s ease,
+    box-shadow 0.28s var(--ease-premium);
+}
+
+.discord-invite-close span{
+  display:block;
+  line-height:1;
+  transform:scale(0.92);
+}
+
+.discord-invite-icon{
+  width:32px;
+  height:32px;
+  border-radius:11px;
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex:0 0 auto;
+  background:linear-gradient(180deg, rgba(22,22,22,0.9), rgba(7,7,7,0.96));
+  border:1px solid rgba(255,255,255,0.074);
+  box-shadow:
+    0 14px 24px rgba(0,0,0,0.32),
+    0 0 16px rgba(255,255,255,0.022),
+    0 1px 0 rgba(255,255,255,0.042) inset;
+  overflow:hidden;
+  transition:transform 0.32s var(--ease-premium), border-color 0.28s ease, box-shadow 0.32s var(--ease-premium);
+}
+
+.discord-invite-icon img{
+  width:100%;
+  height:100%;
+  display:block;
+  object-fit:cover;
+  object-position:center;
+  filter:grayscale(1) brightness(0.82) contrast(1.06);
+  opacity:0.94;
+}
+
+.discord-invite-content{
+  min-width:0;
+  display:flex;
+  flex:1;
+  flex-direction:column;
+  gap:2px;
+  overflow:hidden;
+}
+
+.discord-invite-eyebrow{
+  font-size:6px;
+  letter-spacing:0.14em;
+  text-transform:uppercase;
+  color:var(--text-faint);
+}
+
+.discord-invite-title{
+  font-size:13px;
+  font-weight:700;
+  line-height:1.05;
+  color:var(--text-strong);
+  text-shadow:0 1px 12px rgba(0,0,0,0.42);
+}
+
+.discord-invite-subtitle{
+  font-size:9px;
+  line-height:1.2;
+  color:rgba(255,255,255,0.78);
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.discord-invite-action{
+  min-width:72px;
+  height:30px;
+  margin-left:auto;
+  padding:0 14px;
+  border-radius:9px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex:0 0 auto;
+  flex-shrink:0;
+  box-sizing:border-box;
+  background:linear-gradient(180deg, rgba(47,125,90,0.94), rgba(27,88,61,0.98));
+  border:1px solid rgba(111,214,164,0.18);
+  color:#f5fff9;
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:0.02em;
+  white-space:nowrap;
+  box-shadow:
+    0 12px 24px rgba(12,46,31,0.34),
+    0 0 22px rgba(87,191,140,0.08),
+    0 1px 0 rgba(255,255,255,0.08) inset;
+  transition:
+    transform 0.2s var(--ease-premium),
+    box-shadow 0.24s var(--ease-premium),
+    background 0.24s ease,
+    border-color 0.24s ease,
+    filter 0.24s ease;
+}
+
+.discord-invite-action:active{
+  transform:translateY(1px) scale(0.985);
+  background:linear-gradient(180deg, rgba(41,112,79,0.98), rgba(24,82,57,1));
+  border-color:rgba(104,192,149,0.22);
+  filter:brightness(0.96) saturate(1.02);
+  box-shadow:
+    0 6px 12px rgba(12,46,31,0.26),
+    0 0 10px rgba(87,191,140,0.08),
+    0 1px 0 rgba(255,255,255,0.06) inset;
+}
+
+#profiles{
+  position:fixed;
+  top:50%;
+  left:50%;
+  transform:translate(-50%, -50%);
+  display:flex;
+  gap:22px;
+  padding:24px 18px 30px;
+  justify-content:center;
+  align-items:stretch;
+  max-width:min(96vw, 1360px);
+  width:max-content;
+  overflow-x:auto;
+  overflow-y:visible;
+  opacity:0;
+  transform:translate(-50%, -50%) scale(0.976);
+  transition:opacity 0.88s var(--ease-premium), transform 1.02s var(--ease-premium);
+  scrollbar-width:none;
+  -webkit-overflow-scrolling:touch;
+}
+
+#profiles::-webkit-scrollbar{
+  display:none;
+}
+
+.profiles-inner{
+  display:flex;
+  gap:inherit;
+  align-items:stretch;
+  width:max-content;
+  will-change:transform;
+  transition:transform 0.2s var(--ease-premium);
+}
+
+.profile{
+  min-width:302px;
+  width:302px;
+  min-height:336px;
+  height:336px;
+  background:
+    linear-gradient(180deg, rgba(18,18,18,0.82) 0%, rgba(4,4,4,0.92) 100%),
+    rgba(0,0,0,0.86);
+  backdrop-filter:blur(16px) saturate(112%);
+  -webkit-backdrop-filter:blur(16px) saturate(112%);
+  border-radius:22px;
+  border:1px solid var(--surface-border);
+  padding:20px 15px 18px;
+  flex-shrink:0;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  align-items:stretch;
+  color:var(--text-strong);
+  cursor:url("icons/GreyOsuCross.png") 16 16, crosshair;
+  transition:
+    transform 0.34s var(--ease-premium),
+    opacity 0.28s ease,
+    filter 0.34s var(--ease-premium),
+    border-color 0.28s ease,
+    box-shadow 0.34s var(--ease-premium),
+    background 0.34s ease;
+  position:relative;
+  opacity:0;
+  transform:translateY(38px) scale(0.965);
+  filter:blur(10px);
+  contain:layout;
+  z-index:1;
+  overflow:visible;
+  box-shadow:
+    0 34px 76px rgba(0,0,0,0.66),
+    0 2px 0 rgba(255,255,255,0.024) inset,
+    0 -36px 42px rgba(255,255,255,0.02) inset;
+}
+
+.profile::before,
+.profile::after{
+  content:"";
+  position:absolute;
+  pointer-events:none;
+}
+
+.profile::before{
+  inset:1px;
+  border-radius:21px;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.074), rgba(255,255,255,0.022) 20%, transparent 48%),
+    radial-gradient(circle at top, rgba(255,255,255,0.03), transparent 48%);
+  opacity:0.94;
+  transition:opacity 0.3s ease;
+}
+
+.profile::after{
+  left:50%;
+  bottom:-32px;
+  width:84%;
+  height:22%;
+  transform:translateX(-50%);
+  background:radial-gradient(
+    ellipse at center,
+    rgba(0,0,0,0.88) 0%,
+    rgba(0,0,0,0.56) 42%,
+    rgba(0,0,0,0.2) 76%,
+    transparent 92%
+  );
+  filter:blur(36px);
+  z-index:-1;
+  opacity:1;
+  transition:transform 0.34s var(--ease-premium), filter 0.34s var(--ease-premium), opacity 0.34s ease;
+}
+
+#profiles.show .profile{
+  animation:profileFadeIn 0.96s var(--ease-premium) forwards;
+  animation-delay:var(--card-delay, 0ms);
+}
+
+.profile-header,
+.profile-content,
+.profile-footer{
+  position:relative;
+  z-index:1;
+}
+
+.profile-header{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:flex-start;
+  gap:10px;
+}
+
+.profile-content{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:flex-start;
+  gap:12px;
+  flex:1;
+  width:100%;
+}
+
+.profile-footer{
+  display:flex;
+  justify-content:center;
+  align-items:flex-end;
+  width:100%;
+}
+
+.avatar-slot{
+  min-height:124px;
+  width:100%;
+  display:flex;
+  align-items:flex-start;
+  justify-content:center;
+}
+
+.avatar{
+  position:relative;
+  width:122px;
+  height:122px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transition:transform 0.34s var(--ease-premium);
+}
+
+.avatar::before,
+.avatar::after{
+  content:"";
+  position:absolute;
+  border-radius:50%;
+  pointer-events:none;
+  transition:opacity 0.34s ease, transform 0.34s var(--ease-premium), box-shadow 0.34s ease;
+}
+
+.avatar::before{
+  inset:8px;
+  background:radial-gradient(circle at center, rgba(255,255,255,0.13), rgba(255,255,255,0.035) 38%, transparent 72%);
+  filter:blur(20px);
+  opacity:0.34;
+}
+
+.avatar::after{
+  inset:10px;
+  background:radial-gradient(circle at 32% 28%, rgba(255,255,255,0.05), transparent 56%);
+  opacity:0.45;
+}
+
+.avatar img{
+  width:110px;
+  height:110px;
+  border-radius:50%;
+  border:none;
+  object-fit:cover;
+  box-shadow:
+    0 20px 36px rgba(0,0,0,0.5),
+    0 0 18px rgba(255,255,255,0.024);
+  transition:transform 0.34s var(--ease-premium), box-shadow 0.34s ease, border-color 0.34s ease;
+  background:#111;
+  position:relative;
+  z-index:1;
+  user-select:none;
+  -webkit-user-drag:none;
+  -webkit-touch-callout:none;
+}
+
+.identity-slot{
+  min-height:52px;
+  width:100%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:flex-start;
+}
+
+.nickname{
+  margin-top:10px;
+  font-weight:700;
+  font-size:19px;
+  color:var(--text-strong);
+  line-height:1.2;
+  min-height:22px;
+  letter-spacing:0.24px;
+  text-shadow:0 1px 12px rgba(0,0,0,0.45);
+}
+
+.realname{
+  margin-top:4px;
+  font-size:16px;
+  color:var(--text-soft);
+  line-height:1.2;
+  min-height:19px;
+}
+
+.badges-slot{
+  min-height:34px;
+  width:100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.badges{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:10px;
+  min-height:28px;
+}
+
+.badges-placeholder{
+  display:flex;
+  gap:10px;
+}
+
+.badge-placeholder{
+  width:30px;
+  height:30px;
+  opacity:0;
+}
+
+.badge-container{
+  position:relative;
+  width:30px;
+  height:30px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:10px;
+  background:linear-gradient(180deg, rgba(255,255,255,0.048), rgba(255,255,255,0.016));
+  border:1px solid rgba(255,255,255,0.04);
+  box-shadow:
+    0 10px 20px rgba(0,0,0,0.26),
+    0 1px 0 rgba(255,255,255,0.03) inset;
+  transition:transform 0.28s var(--ease-premium), border-color 0.28s ease, background 0.28s ease, box-shadow 0.28s ease;
+}
+
+.badges img{
+  width:20px;
+  height:20px;
+  transition:transform 0.28s var(--ease-premium), filter 0.28s ease;
+}
+
+.tooltip{
+  position:absolute;
+  bottom:142%;
+  left:50%;
+  transform:translateX(-50%) translateY(5px);
+  background:rgba(12,12,12,0.92);
+  color:white;
+  font-size:12px;
+  letter-spacing:0.18px;
+  padding:6px 10px;
+  border-radius:8px;
+  opacity:0;
+  pointer-events:none;
+  white-space:nowrap;
+  transition:opacity 0.22s ease, transform 0.26s var(--ease-premium);
+  border:1px solid rgba(255,255,255,0.06);
+  box-shadow:0 14px 32px rgba(0,0,0,0.36);
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+}
+
+.badge-container:hover .tooltip{
+  opacity:1;
+  transform:translateX(-50%) translateY(0);
+}
+
+.bio-slot{
+  min-height:60px;
+  width:100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.bio{
+  margin-top:8px;
+  font-size:14px;
+  line-height:1.5;
+  min-height:50px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  width:100%;
+  color:var(--text-soft);
+  text-wrap:balance;
+}
+
+.bio a{
+  color:#6eb6ff;
+  text-decoration:none;
+  transition:color 0.22s ease, opacity 0.22s ease;
+}
+
+.bio a:hover{
+  color:#8fc9ff;
+}
+
+.bio-placeholder{
+  opacity:0;
+}
+
+.links-slot{
+  min-height:78px;
+  width:100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin-top:auto;
+  padding-bottom:8px;
+}
+
+.links{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  width:100%;
+  gap:12px;
+  min-height:68px;
+  max-width:100%;
+  flex-wrap:nowrap;
+  box-sizing:border-box;
+}
+
+.links.is-compact{
+  gap:8px;
+}
+
+.link{
+  width:58px;
+  height:58px;
+  padding:0;
+  border:1px solid rgba(255,255,255,0.05);
+  border-radius:17px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:linear-gradient(180deg, rgba(20,20,20,0.94), rgba(8,8,8,0.98));
+  cursor:url("icons/GreyOsuCross.png") 16 16, crosshair;
+  flex:0 0 auto;
+  box-shadow:
+    0 16px 30px rgba(0,0,0,0.34),
+    0 0 20px rgba(255,255,255,0.035),
+    0 1px 0 rgba(255,255,255,0.04) inset;
+  transition:
+    transform 0.28s var(--ease-premium),
+    border-color 0.24s ease,
+    box-shadow 0.28s var(--ease-premium),
+    background 0.28s ease,
+    opacity 0.24s ease;
+}
+
+.links.is-compact .link{
+  width:48px;
+  height:48px;
+  border-radius:15px;
+}
+
+.link img{
+  width:28px;
+  height:28px;
+  background:transparent;
+  border-radius:0;
+  box-shadow:none;
+  object-fit:contain;
+  display:block;
+  filter:drop-shadow(0 0 8px rgba(255,255,255,0.18));
+  transition:transform 0.28s var(--ease-premium), filter 0.28s ease, opacity 0.25s ease;
+}
+
+.links.is-compact .link img{
+  width:24px;
+  height:24px;
+}
+
+.link-label{
+  display:none;
+  align-items:center;
+  justify-content:center;
+  width:100%;
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:0.08em;
+  color:rgba(255,255,255,0.92);
+  text-transform:uppercase;
+}
+
+.links.is-compact .link-label{
+  font-size:10px;
+}
+
+.link.is-fallback img{
+  display:none;
+}
+
+.link.is-fallback .link-label{
+  display:flex;
+}
+
+.placeholder-link{
+  pointer-events:none;
+  cursor:default;
+  opacity:0;
+}
+
+.hidden{
+  display:none !important;
+}
+
+#profiles.show{
+  opacity:1;
+  transform:translate(-50%, -50%) scale(1);
+}
+
+.status{
+  position:absolute;
+  right:6px;
+  bottom:8px;
+  width:18px;
+  height:18px;
+  border-radius:50%;
+  border:3px solid rgba(0,0,0,0.92);
+  z-index:2;
+}
+
+.status.online{
+  background:#23a559;
+  box-shadow:0 0 12px #23a559;
+}
+
+.status.idle{
+  background:#f0b232;
+  box-shadow:0 0 12px #f0b232;
+}
+
+.status.dnd{
+  background:#f23f43;
+  box-shadow:0 0 12px #f23f43;
+}
+
+.status.offline{
+  background:#80848e;
+}
+
+.profiles-empty-state{
+  min-width:302px;
+  min-height:336px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  border-radius:22px;
+  color:white;
+  background:linear-gradient(180deg, rgba(10,10,10,0.88), rgba(0,0,0,0.9));
+  border:1px solid rgba(255,255,255,0.06);
+  box-shadow:
+    0 18px 42px rgba(0,0,0,0.44),
+    0 1px 0 rgba(255,255,255,0.03) inset;
+  text-align:center;
+}
+
+@keyframes profileFadeIn{
+  from{
+    opacity:0;
+    transform:translateY(38px) scale(0.965);
+    filter:blur(10px);
+  }
+
+  to{
+    opacity:1;
+    transform:translateY(0);
+    filter:blur(0);
+  }
+}
+
+@keyframes fadeIn{
+  to{
+    opacity:1;
+  }
+}
+
+@keyframes ambientFloat{
+  from{
+    transform:scale(1.02) translate3d(0, 0, 0);
+  }
+
+  to{
+    transform:scale(1.05) translate3d(0, -10px, 0);
+  }
+}
+
+@keyframes overlayPulse{
+  from{
+    transform:scale(1);
+    opacity:0.88;
+  }
+
+  to{
+    transform:scale(1.03);
+    opacity:1;
+  }
+}
+
+@media (hover: hover){
+  #discordInviteLauncher:hover{
+    transform:translate(-50%, -2px) scale(1.03);
+    border-color:rgba(255,255,255,0.11);
+    box-shadow:
+      0 22px 44px rgba(0,0,0,0.48),
+      0 0 26px rgba(255,255,255,0.05),
+      0 1px 0 rgba(255,255,255,0.05) inset;
+  }
+
+  #discordInvite.is-open:hover{
+    transform:translate(-50%, -3px) scale(1.01);
+    border-color:rgba(255,255,255,0.12);
+    box-shadow:
+      0 28px 62px rgba(0,0,0,0.58),
+      0 0 34px rgba(255,255,255,0.05),
+      0 1px 0 rgba(255,255,255,0.05) inset;
+  }
+
+  #discordInvite.is-open:hover::before{
+    transform:scale(1.11);
+    opacity:0.84;
+    filter:grayscale(1) brightness(0.48) contrast(1.08) blur(13px);
+  }
+
+  #discordInvite.is-open:hover .discord-invite-icon{
+    transform:translateY(-1px) scale(1.02);
+    border-color:rgba(255,255,255,0.11);
+    box-shadow:
+      0 18px 30px rgba(0,0,0,0.36),
+      0 0 22px rgba(255,255,255,0.03),
+      0 1px 0 rgba(255,255,255,0.05) inset;
+  }
+
+  .discord-invite-action:hover{
+    transform:translateY(-1px) scale(1.03);
+    background:linear-gradient(180deg, rgba(56,146,103,0.98), rgba(31,104,72,1));
+    border-color:rgba(138,230,184,0.26);
+    filter:brightness(1.05) saturate(1.08);
+    box-shadow:
+      0 18px 30px rgba(12,46,31,0.4),
+      0 0 30px rgba(87,191,140,0.18),
+      0 0 12px rgba(160,255,216,0.08),
+      0 1px 0 rgba(255,255,255,0.14) inset;
+  }
+
+  .discord-invite-close:hover{
+    transform:scale(1.03);
+    color:rgba(255,255,255,0.96);
+    border-color:rgba(255,255,255,0.14);
+    background:rgba(18,18,18,0.34);
+    box-shadow:
+      0 10px 18px rgba(0,0,0,0.24),
+      0 0 18px rgba(255,255,255,0.08),
+      0 1px 0 rgba(255,255,255,0.05) inset;
+  }
+
+  #profiles.carousel-mode{
+    width:min(94vw, 1140px);
+    min-width:min(94vw, 1140px);
+    max-width:min(94vw, 1140px);
+    height:430px;
+    padding:18px 0 52px;
+    gap:0;
+    overflow:visible;
+    perspective:2200px;
+    transform-style:preserve-3d;
+    cursor:grab;
+    user-select:none;
+    touch-action:none;
+    outline:none;
+  }
+
+  #profiles.carousel-mode.is-dragging{
+    cursor:grabbing;
+  }
+
+  #profiles.carousel-mode .profiles-inner{
+    position:relative;
+    width:100%;
+    height:100%;
+    gap:0;
+    justify-content:center;
+    transform-style:preserve-3d;
+    will-change:transform;
+  }
+
+  #profiles.carousel-mode .profile{
+    position:absolute;
+    top:50%;
+    left:50%;
+    margin:0;
+    opacity:1;
+    animation:none;
+    filter:none;
+    transform:translate(-50%, -50%);
+    transition:
+      opacity 0.32s ease,
+      filter 0.36s var(--ease-premium),
+      border-color 0.36s ease,
+      box-shadow 0.36s var(--ease-premium),
+      background 0.36s ease;
+    will-change:transform, opacity, filter;
+    transform-style:preserve-3d;
+    backface-visibility:hidden;
+  }
+
+  #profiles.carousel-mode .profile::after{
+    bottom:-28px;
+    width:74%;
+    height:18%;
+    filter:blur(30px);
+    opacity:0.7;
+  }
+
+  #profiles.carousel-mode .profile[aria-hidden="true"]{
+    pointer-events:none;
+  }
+
+  #profiles.carousel-mode .profile.is-active{
+    border-color:rgba(255,255,255,0.17);
+    background:
+      linear-gradient(180deg, rgba(32,32,32,0.9) 0%, rgba(8,8,8,0.95) 100%),
+      rgba(0,0,0,0.9);
+    box-shadow:
+      0 54px 116px rgba(0,0,0,0.82),
+      0 0 52px rgba(255,255,255,0.065),
+      0 1px 0 rgba(255,255,255,0.05) inset,
+      0 -40px 46px rgba(255,255,255,0.03) inset;
+  }
+
+  #profiles.carousel-mode .profile.is-active::before{
+    opacity:1;
+    background:
+      linear-gradient(180deg, rgba(255,255,255,0.11), rgba(255,255,255,0.03) 21%, transparent 48%),
+      radial-gradient(circle at top, rgba(255,255,255,0.05), transparent 48%);
+  }
+
+  #profiles.carousel-mode .profile.is-active::after{
+    opacity:1;
+    filter:blur(48px);
+    transform:translateX(-50%) scale(1.14);
+  }
+
+  #profiles.carousel-mode .profile.is-active .avatar{
+    transform:scale(1.014);
+  }
+
+  #profiles.carousel-mode .profile.is-active .avatar::before{
+    opacity:0.68;
+    transform:scale(1.1);
+    filter:blur(24px);
+  }
+
+  #profiles.carousel-mode .profile.is-active .avatar::after{
+    opacity:0.76;
+    transform:scale(1.03);
+  }
+
+  #profiles.carousel-mode .profile.is-active .avatar img{
+    transform:scale(1.035);
+    box-shadow:
+      0 32px 58px rgba(0,0,0,0.68),
+      0 0 34px rgba(255,255,255,0.072);
+  }
+
+  #profiles.carousel-mode .profile.is-active .nickname{
+    text-shadow:0 3px 18px rgba(0,0,0,0.62);
+  }
+
+  #profiles.carousel-mode .profile.is-active .realname{
+    color:rgba(255,255,255,0.9);
+  }
+
+  #profiles.carousel-mode .profile.is-active .bio{
+    color:rgba(255,255,255,0.84);
+  }
+
+  #profiles.carousel-mode .profile.is-active .link{
+    border-color:rgba(255,255,255,0.085);
+    box-shadow:
+      0 18px 34px rgba(0,0,0,0.42),
+      0 0 26px rgba(255,255,255,0.055),
+      0 1px 0 rgba(255,255,255,0.045) inset;
+  }
+
+  #profiles.carousel-mode .profile.is-near{
+    border-color:rgba(255,255,255,0.082);
+    background:
+      linear-gradient(180deg, rgba(18,18,18,0.78) 0%, rgba(4,4,4,0.9) 100%),
+      rgba(0,0,0,0.84);
+    box-shadow:
+      0 20px 42px rgba(0,0,0,0.52),
+      0 1px 0 rgba(255,255,255,0.024) inset,
+      0 -20px 26px rgba(255,255,255,0.014) inset;
+  }
+
+  #profiles.carousel-mode .profile.is-near::after{
+    width:70%;
+    height:17%;
+    opacity:0.5;
+    filter:blur(24px);
+    transform:translateX(-50%) scale(0.96);
+  }
+
+  #profiles.carousel-mode .profile.is-near .realname,
+  #profiles.carousel-mode .profile.is-near .bio{
+    color:rgba(255,255,255,0.72);
+  }
+
+  #profiles.carousel-mode .profile.is-near .avatar,
+  #profiles.carousel-mode .profile.is-near .avatar img{
+    transform:none;
+  }
+
+  #profiles.carousel-mode .profile.is-near .avatar::before{
+    opacity:0.22;
+    transform:none;
+    filter:blur(18px);
+  }
+
+  #profiles.carousel-mode .profile.is-near .avatar::after{
+    opacity:0.28;
+    transform:none;
+  }
+
+  #profiles.carousel-mode .profile.is-near .avatar img{
+    box-shadow:
+      0 16px 28px rgba(0,0,0,0.44),
+      0 0 12px rgba(255,255,255,0.018);
+  }
+
+  #profiles.carousel-mode .profile.is-far{
+    border-color:rgba(255,255,255,0.048);
+    background:
+      linear-gradient(180deg, rgba(16,16,16,0.7) 0%, rgba(2,2,2,0.86) 100%),
+      rgba(0,0,0,0.8);
+    box-shadow:
+      0 10px 24px rgba(0,0,0,0.38),
+      0 1px 0 rgba(255,255,255,0.014) inset,
+      0 -14px 18px rgba(255,255,255,0.008) inset;
+  }
+
+  #profiles.carousel-mode .profile.is-far::after{
+    width:64%;
+    height:15%;
+    opacity:0.32;
+    filter:blur(20px);
+    transform:translateX(-50%) scale(0.92);
+  }
+
+  #profiles.carousel-mode .profile.is-far .realname,
+  #profiles.carousel-mode .profile.is-far .bio{
+    color:rgba(255,255,255,0.62);
+  }
+
+  #profiles.carousel-mode .profile.is-far .badges,
+  #profiles.carousel-mode .profile.is-far .links{
+    opacity:0.74;
+  }
+
+  #profiles.carousel-mode .profile.is-far .avatar,
+  #profiles.carousel-mode .profile.is-far .avatar img{
+    transform:none;
+  }
+
+  #profiles.carousel-mode .profile.is-far .avatar::before{
+    opacity:0.14;
+    transform:none;
+    filter:blur(16px);
+  }
+
+  #profiles.carousel-mode .profile.is-far .avatar::after{
+    opacity:0.18;
+    transform:none;
+  }
+
+  #profiles.carousel-mode .profile.is-far .avatar img{
+    box-shadow:
+      0 12px 22px rgba(0,0,0,0.34),
+      0 0 8px rgba(255,255,255,0.012);
+  }
+}
+
+@media (hover: hover){
+  #profiles:not(.carousel-mode) .profiles-inner:hover .profile{
+    opacity:0.58;
+    filter:saturate(0.72) brightness(0.74);
+    transform:translateY(8px) scale(0.98);
+    border-color:rgba(255,255,255,0.045);
+    box-shadow:
+      0 20px 44px rgba(0,0,0,0.46),
+      0 2px 0 rgba(255,255,255,0.015) inset,
+      0 -24px 32px rgba(255,255,255,0.012) inset;
+  }
+
+  #profiles:not(.carousel-mode) .profiles-inner:hover .profile::after{
+    transform:translateX(-50%) scale(0.96);
+    filter:blur(32px);
+    opacity:0.62;
+  }
+
+  #profiles:not(.carousel-mode) .profiles-inner:hover .profile:hover{
+    opacity:1;
+    filter:none;
+    transform:translateY(-16px) scale(1.03);
+    border-color:var(--surface-border-strong);
+    box-shadow:
+      0 38px 78px rgba(0,0,0,0.72),
+      0 0 34px rgba(255,255,255,0.06),
+      0 1px 0 rgba(255,255,255,0.03) inset,
+      0 -34px 40px rgba(255,255,255,0.02) inset;
+  }
+
+  #profiles:not(.carousel-mode) .profiles-inner:hover .profile:hover::before{
+    opacity:1;
+  }
+
+  #profiles:not(.carousel-mode) .profiles-inner:hover .profile:hover::after{
+    transform:translateX(-50%) scale(1.08);
+    filter:blur(40px);
+    opacity:1;
+  }
+
+  #profiles:not(.carousel-mode) .profiles-inner:hover .profile:not(:hover) .avatar::before{
+    opacity:0.2;
+    transform:scale(0.94);
+  }
+
+  #profiles:not(.carousel-mode) .profiles-inner:hover .profile:not(:hover) .avatar img{
+    box-shadow:
+      0 14px 26px rgba(0,0,0,0.34),
+      0 0 12px rgba(255,255,255,0.012);
+  }
+
+  #profiles:not(.carousel-mode) .profiles-inner:hover .profile:not(:hover) .link{
+    opacity:0.88;
+  }
+
+  #profiles:not(.carousel-mode) .profile:hover .avatar{
+    transform:translateY(-2px);
+  }
+
+  #profiles:not(.carousel-mode) .profile:hover .avatar::before{
+    opacity:0.48;
+    transform:scale(1.06);
+  }
+
+  #profiles:not(.carousel-mode) .profile:hover .avatar::after{
+    opacity:0.62;
+    transform:scale(1.02);
+  }
+
+  #profiles:not(.carousel-mode) .profile:hover .avatar img{
+    transform:scale(1.05);
+    box-shadow:
+      0 24px 42px rgba(0,0,0,0.58),
+      0 0 24px rgba(255,255,255,0.05);
+  }
+
+  .badge-container:hover{
+    transform:translateY(-2px);
+    border-color:rgba(255,255,255,0.08);
+    background:linear-gradient(180deg, rgba(255,255,255,0.07), rgba(255,255,255,0.024));
+    box-shadow:
+      0 14px 24px rgba(0,0,0,0.28),
+      0 1px 0 rgba(255,255,255,0.04) inset;
+  }
+
+  .badge-container:hover img{
+    transform:scale(1.14);
+    filter:drop-shadow(0 0 8px rgba(255,255,255,0.24));
+  }
+
+  .link:hover{
+    transform:translateY(-4px) scale(1.04);
+    border-color:rgba(255,255,255,0.095);
+    background:linear-gradient(180deg, rgba(24,24,24,0.96), rgba(8,8,8,0.98));
+    box-shadow:
+      0 18px 34px rgba(0,0,0,0.42),
+      0 0 24px rgba(255,255,255,0.065),
+      0 1px 0 rgba(255,255,255,0.05) inset;
+  }
+
+  .link:hover img{
+    opacity:1;
+    transform:scale(1.08);
+    filter:drop-shadow(0 0 12px rgba(255,255,255,0.42));
+  }
+
+  .link.is-fallback:hover .link-label{
+    transform:scale(1.04);
+  }
+}
+
+@media (hover: none){
+  #discordInviteLauncher,
+  #discordInvite{
+    backdrop-filter:blur(12px) saturate(108%);
+    -webkit-backdrop-filter:blur(12px) saturate(108%);
+  }
+
+  .profile:hover{
+    transform:none;
+  }
+
+  .avatar img:hover,
+  .badges img:hover,
+  .link:hover img{
+    transform:none;
+    filter:none;
+  }
+
+  #overlay:hover::before{
+    transform:none;
+  }
+
+  #overlay:hover .enter-text{
+    transform:none;
+    letter-spacing:4px;
+  }
+
+  #overlay:hover .enter-text::before{
+    width:0;
+  }
+}
+
+@media (hover: none), (pointer: coarse){
+  #profiles{
+    top:0;
+    bottom:0;
+    left:0;
+    right:0;
+    width:auto;
+    max-width:none;
+    transform:none;
+    box-sizing:border-box;
+    gap:16px;
+    padding:24px 16px;
+    justify-content:flex-start;
+    align-items:center;
+    overflow-x:auto;
+    overflow-y:hidden;
+    scroll-snap-type:x mandatory;
+    scroll-padding-inline:16px;
+    overscroll-behavior-x:contain;
+    touch-action:pan-x pinch-zoom;
+  }
+
+  #profiles.show{
+    transform:none;
+  }
+
+  .profiles-inner{
+    gap:16px;
+    padding-inline:2px;
+    align-items:center;
+    transform:none !important;
+    will-change:auto;
+  }
+
+  .profile{
+    min-width:min(320px, calc(100vw - 36px));
+    width:min(320px, calc(100vw - 36px));
+    min-height:336px;
+    height:336px;
+    padding:20px 18px 18px;
+    scroll-snap-align:center;
+    scroll-snap-stop:always;
+  }
+
+  .profile::after{
+    bottom:-28px;
+    width:86%;
+    height:22%;
+    filter:blur(34px);
+  }
+}
+
+@media (max-width: 900px){
+  #profiles{
+    justify-content:flex-start;
+    max-width:92vw;
+    gap:18px;
+    padding:22px 14px 28px;
+  }
+
+  .profile{
+    min-width:292px;
+    width:292px;
+    min-height:332px;
+    height:332px;
+    padding:18px 14px 16px;
+  }
+}
+
+@media (max-width: 480px){
+  .enter-text{
+    font-size:30px;
+    letter-spacing:3px;
+  }
+
+  #discordInviteLauncher{
+    width:42px;
+    height:42px;
+    border-radius:14px;
+    bottom:max(12px, env(safe-area-inset-bottom));
+  }
+
+  #discordInviteLauncher img{
+    width:18px;
+    height:18px;
+  }
+
+  #discordInvite{
+    width:min(340px, calc(100vw - 24px));
+    min-height:62px;
+    gap:7px;
+    padding:0;
+    border-radius:14px;
+    bottom:max(12px, env(safe-area-inset-bottom));
+  }
+
+  .discord-invite-link{
+    min-height:62px;
+    gap:10px;
+    padding:11px 40px 11px 14px;
+    box-sizing:border-box;
+  }
+
+  .discord-invite-close{
+    top:8px;
+    right:8px;
+    width:14px;
+    height:14px;
+    font-size:10px;
+  }
+
+  .discord-invite-icon{
+    width:30px;
+    height:30px;
+    border-radius:10px;
+  }
+
+  .discord-invite-icon img{
+    width:100%;
+    height:100%;
+  }
+
+  .discord-invite-eyebrow{
+    font-size:6px;
+    letter-spacing:0.12em;
+  }
+
+  .discord-invite-title{
+    font-size:12px;
+  }
+
+  .discord-invite-subtitle{
+    font-size:8px;
+  }
+
+  .discord-invite-action{
+    min-width:72px;
+    height:30px;
+    padding:0 14px;
+    border-radius:8px;
+    font-size:9px;
+    flex-shrink:0;
+  }
+
+  #profiles{
+    padding:24px 16px;
+  }
+
+  #profiles.show{
+    transform:none;
+  }
+
+  .profile{
+    min-width:min(320px, calc(100vw - 32px));
+    width:min(320px, calc(100vw - 32px));
+    min-height:336px;
+    height:336px;
+    border-radius:20px;
+    padding:20px 18px 18px;
+  }
+
+  .avatar-slot{
+    min-height:116px;
+  }
+
+  .avatar{
+    width:116px;
+    height:116px;
+  }
+
+  .avatar img{
+    width:104px;
+    height:104px;
+  }
+
+  .links{
+    gap:12px;
+  }
+
+  .link{
+    width:56px;
+    height:56px;
+    border-radius:16px;
+  }
+
+  .link img{
+    width:27px;
+    height:27px;
+  }
+
+  .links.is-compact{
+    gap:8px;
+  }
+
+  .links.is-compact .link{
+    width:46px;
+    height:46px;
+    border-radius:13px;
+  }
+
+  .links.is-compact .link img{
+    width:22px;
+    height:22px;
+  }
+
+}
+
+@media (hover: none), (pointer: coarse){
+  #profiles{
+    top:0;
+    bottom:0;
+    left:0;
+    right:0;
+    width:auto;
+    max-width:none;
+    box-sizing:border-box;
+    gap:16px;
+    padding-top:max(20px, env(safe-area-inset-top));
+    padding-bottom:max(20px, env(safe-area-inset-bottom));
+    padding-left:16px;
+    padding-right:16px;
+    justify-content:flex-start;
+    align-items:center;
+    overflow-y:hidden;
+    transform:none;
+  }
+
+  .profiles-inner{
+    align-items:center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce){
+  body::before,
+  .enter-text,
+  .profile,
+  .profiles-inner,
+  .avatar,
+  .avatar::before,
+  .avatar::after,
+  .avatar img,
+  .badge-container,
+  .badges img,
+  .link,
+  .link img,
+  #overlay,
+  #overlay::before,
+  .tooltip,
+  #discordInviteLauncher,
+  #discordInvite,
+  #discordInvite::before,
+  .discord-invite-close,
+  .discord-invite-icon,
+  .discord-invite-action{
+    transition:none !important;
+    animation:none !important;
+  }
+}
